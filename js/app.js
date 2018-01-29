@@ -19,7 +19,8 @@ formulario .addEventListener( 'submit', function( e ) {
           marcaSeleccionada = marca .options[ marca .selectedIndex ] .value,            // Obtiene el valor del elemento SELECT de marca en el DOM 
           anio = document .getElementById( 'anio' ),                                    // Obtiene el SELECT de anio en el DOM 
           anioSeleccionado = anio .options[ anio .selectedIndex ] .value,               // Obtiene el valor del elemento SELECT de anio en el DOM
-          tipoSeguro = document .querySelector( 'input[name="tipo"]:checked' ) .value;  // Obtiene el valor del elemento RADIO (tipo) en el DOM 
+          tipoSeguro = document .querySelector( 'input[name="tipo"]:checked' ) .value,  // Obtiene el valor del elemento RADIO (tipo) en el DOM 
+          interfaz = new Interfaz();                                                    // Crea instancia de 'Interfaz'
     
     e .preventDefault();        // Detiene y previene que se ejecute el 'action' en el formulario
 
@@ -32,6 +33,7 @@ formulario .addEventListener( 'submit', function( e ) {
     // Valida que los campos no estén vacíos
     if( marcaSeleccionada === '' || anioSeleccionado === '' || tipoSeguro === '' ) {
         console .log( 'ERROR: ', 'Faltan datos' );         // Interface imprimiendo un ERROR
+        interfaz .mostrarError( 'error', 'Faltan datos: Intenta de nuevo' );
     }
     else {
         // Realizar instancia segura y mostrar la interface
@@ -39,3 +41,27 @@ formulario .addEventListener( 'submit', function( e ) {
         
     }
 });
+
+/* Crea Interface */
+function Interfaz() {}
+/* Agrega Prototype a 'Interface' */
+Interfaz .prototype .mostrarError = function( tipo, mensaje ) {
+    const div = document .createElement( 'div' );           // Crea el elemento 'div'
+
+    /* Validar el tipo de Error */
+    if( tipo === 'error' ) {
+        div .classList .add( 'mensaje', 'error' );          // Agrega la clase 'mensaje' y 'error' al elemento 'div'
+    }
+    else {
+        div .classList .add( 'mensaje', 'correcto' );       // Agrega la clase 'mensaje' y 'correcto' al elemento 'div'
+    }
+
+    /* Muestra Error */
+    div .innerHTML = `${ mensaje }`;    // Agrega el mensaje al elemento 'div'
+    formulario .insertBefore( div, document .querySelector( '.form-group' ) );       // Inserta el elemento 'div' ANTES del elemento con la clase 'form-group' 
+
+    /* Oculta el ERROR */
+    setTimeout( function() {
+        document .querySelector( '.mensaje' ) .remove();    // El elemento con la clase 'mensaje' se elimina del DOM
+    }, 5000 );     // 5s
+}
