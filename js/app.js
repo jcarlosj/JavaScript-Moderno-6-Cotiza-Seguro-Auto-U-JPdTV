@@ -37,8 +37,10 @@ formulario .addEventListener( 'submit', function( e ) {
     }
     else {
         // Realizar instancia segura y mostrar la interface
-        console .log( 'Instancia Interface' );
-        
+        const seguro = new Seguro( marcaSeleccionada, anioSeleccionado, tipoSeguro ),   // Crea Instancia de Seguro
+              valorSeguro = seguro .cotizar();      // Cotizar el Seguro
+    
+        console .log( 'Valor Cotización: ', valorSeguro );
     }
 });
 
@@ -64,4 +66,43 @@ Interfaz .prototype .mostrarError = function( tipo, mensaje ) {
     setTimeout( function() {
         document .querySelector( '.mensaje' ) .remove();    // El elemento con la clase 'mensaje' se elimina del DOM
     }, 5000 );     // 5s
+}
+
+/* Constructor para el Seguro */
+function Seguro( marca, anio, tipo ) {
+    this .marca = marca;
+    this .anio = anio;
+    this .tipo = tipo;
+}
+/* Agrega Prototype a 'Seguro' */
+Seguro .prototype .cotizar = function() {
+    let cantidad;
+    const base = 2000;
+    /* Primer Cálculo por Marca
+     *  1 = Americano   1.15
+     *  2 = Asiatico    1.05
+     *  3 = Europeo     1.35
+     */
+    switch(  this .marca ) {
+        case '1':   cantidad = base * 1.15; break;
+        case '2':   cantidad = base * 1.05; break;
+        case '3':   cantidad = base * 1.35; break;
+    }    
+    // Segundo Cálculo por Años (Cada año se recude 3% el valor del seguro)
+    const antiguedad =  new Date() .getFullYear() - this .anio;    // Año actual, menos año del vehículo
+    cantidad -= ( ( antiguedad * 3 ) * cantidad ) / 100;           // Calcula reducción del 3% por cada año de diferencia
+    /* Tercer Cálculo por tipo de Seguro
+     *  - Básico aumenta 30% más
+     *  - Completo aumenta 50% más
+     */
+    if( this .tipo === 'basico'  ) {
+        cantidad *= 1.3;
+    }
+    else {
+        cantidad *= 1.5;
+    }
+
+    console .log( `${ this .marca } / ${ this .anio } / ${ this .tipo }: ${ cantidad }`);
+
+    return cantidad;
 }
