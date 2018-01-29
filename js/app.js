@@ -28,4 +28,14 @@ formulario .addEventListener( 'submit', function( e ) {
         console .log( 'Año: ',  anioSeleccionado );
         console .log( 'Tipo seguro:', tipoSeguro );
     console .groupEnd();
+
+    // Valida que los campos no estén vacíos
+    if( marcaSeleccionada === '' || anioSeleccionado === '' || tipoSeguro === '' ) {
+        console .log( 'ERROR: ', 'Faltan datos' );         // Interface imprimiendo un ERROR
+    }
+    else {
+        // Realizar instancia segura y mostrar la interface
+        console .log( 'Instancia Interface' );
+        
+    }
 });
