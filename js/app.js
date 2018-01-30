@@ -33,9 +33,16 @@ formulario .addEventListener( 'submit', function( e ) {
     // Valida que los campos no estén vacíos
     if( marcaSeleccionada === '' || anioSeleccionado === '' || tipoSeguro === '' ) {
         console .log( 'ERROR: ', 'Faltan datos' );         // Interface imprimiendo un ERROR
-        interfaz .mostrarError( 'error', 'Faltan datos: Intenta de nuevo' );
+        interfaz .mostrarMensaje( 'error', 'Faltan datos: Intenta de nuevo' );
     }
     else {
+        // Limpiar resultados anteriores
+        const resultados = document .querySelector( '#resultado div' );
+
+        if( resultados != null ) {
+            resultados .remove();
+        }
+
         // Realizar instancia segura y mostrar la interface
         const seguro = new Seguro( marcaSeleccionada, anioSeleccionado, tipoSeguro ),   // Crea Instancia de Seguro
               valorSeguro = seguro .cotizar();      // Cotizar el Seguro
@@ -44,13 +51,14 @@ formulario .addEventListener( 'submit', function( e ) {
 
         // Mostrar el resultado 
         interfaz .mostrarResultado( seguro, valorSeguro );
+        interfaz .mostrarMensaje( 'correcto', 'Cotizando...' );
     }
 });
 
 /* Crea Interface */
 function Interfaz() {}
 /* Agrega Prototype a 'Interface' */
-Interfaz .prototype .mostrarError = function( tipo, mensaje ) {
+Interfaz .prototype .mostrarMensaje = function( tipo, mensaje ) {
     const div = document .createElement( 'div' );           // Crea el elemento 'div'
 
     /* Validar el tipo de Error */
@@ -86,13 +94,21 @@ Interfaz .prototype .mostrarResultado = function( seguro, total ) {
     const div = document .createElement( 'div' );           
     // Insertamos la información en el elemento
     div .innerHTML = `                
-        <h3>Valor cotización</h3>                      
+        <p class="header">Valor cotización</p>                      
         <p><b>Marca:</b> ${ marca }</p>
         <p><b>Año:</b> ${ seguro .anio }</p>
         <p><b>Tipo:</b> ${ seguro .tipo }</p>
-        <p><b>Total:</b> ${ total }</p>
+        <p><b>Total:</b> $ ${ total }</p>
     `;
-    resultado .appendChild( div );
+    // Despliega el Spinner (Cargando) 
+    const spinner = document .querySelector( '#cargando img' );
+    spinner .style .display = 'block';
+
+    setTimeout( function() {
+        spinner .style .display = 'none';   // Oculta el Spinner
+        resultado .appendChild( div );      // Agregamos el resultado al DOM
+    }, 5000 );      // 5s
+    
 }
 
 /* Constructor para el Seguro */
