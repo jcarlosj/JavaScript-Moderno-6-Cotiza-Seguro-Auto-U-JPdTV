@@ -55,97 +55,101 @@ formulario .addEventListener( 'submit', function( e ) {
     }
 });
 
-/* Crea Interface */
-function Interfaz() {}
-/* Agrega Prototype a 'Interface' */
-Interfaz .prototype .mostrarMensaje = function( tipo, mensaje ) {
-    const div = document .createElement( 'div' );           // Crea el elemento 'div'
-
-    /* Validar el tipo de Error */
-    if( tipo === 'error' ) {
-        div .classList .add( 'mensaje', 'error' );          // Agrega la clase 'mensaje' y 'error' al elemento 'div'
-    }
-    else {
-        div .classList .add( 'mensaje', 'correcto' );       // Agrega la clase 'mensaje' y 'correcto' al elemento 'div'
-    }
-
-    /* Muestra Error */
-    div .innerHTML = `${ mensaje }`;    // Agrega el mensaje al elemento 'div'
-    formulario .insertBefore( div, document .querySelector( '.form-group' ) );       // Inserta el elemento 'div' ANTES del elemento con la clase 'form-group' 
-
-    /* Oculta el ERROR */
-    setTimeout( function() {
-        document .querySelector( '.mensaje' ) .remove();    // El elemento con la clase 'mensaje' se elimina del DOM
-    }, 5000 );     // 5s
-}
-/* Agrega Prototype a 'Inferface' */
-Interfaz .prototype .mostrarResultado = function( seguro, total ) {
-    const resultado = document .getElementById( 'resultado' );
-    let marca;
-
-    console .log( seguro );
-    switch( seguro .marca ) {
-        case '1': marca = 'Americano'; break;
-        case '2': marca = 'Asiático'; break;
-        case '3': marca = 'Europeo'; break;
-    }
-
-    // Crea el elemento 'div' donde se mostrarán los datos
-    const div = document .createElement( 'div' );           
-    // Insertamos la información en el elemento
-    div .innerHTML = `                
-        <p class="header">Valor cotización</p>                      
-        <p><b>Marca:</b> ${ marca }</p>
-        <p><b>Año:</b> ${ seguro .anio }</p>
-        <p><b>Tipo:</b> ${ seguro .tipo }</p>
-        <p><b>Total:</b> $ ${ total }</p>
-    `;
-    // Despliega el Spinner (Cargando) 
-    const spinner = document .querySelector( '#cargando img' );
-    spinner .style .display = 'block';
-
-    setTimeout( function() {
-        spinner .style .display = 'none';   // Oculta el Spinner
-        resultado .appendChild( div );      // Agregamos el resultado al DOM
-    }, 5000 );      // 5s
+/* Clase Interface */
+class Interfaz {
+    /* Prototypes (o Métodos) */
+    mostrarMensaje( tipo, mensaje ) {
+        const div = document .createElement( 'div' );           // Crea el elemento 'div'
     
-}
-
-/* Constructor para el Seguro */
-function Seguro( marca, anio, tipo ) {
-    this .marca = marca;
-    this .anio = anio;
-    this .tipo = tipo;
-}
-/* Agrega Prototype a 'Seguro' */
-Seguro .prototype .cotizar = function() {
-    let cantidad;
-    const base = 2000;
-    /* Primer Cálculo por Marca
-     *  1 = Americano   1.15
-     *  2 = Asiatico    1.05
-     *  3 = Europeo     1.35
-     */
-    switch(  this .marca ) {
-        case '1':   cantidad = base * 1.15; break;
-        case '2':   cantidad = base * 1.05; break;
-        case '3':   cantidad = base * 1.35; break;
-    }    
-    // Segundo Cálculo por Años (Cada año se recude 3% el valor del seguro)
-    const antiguedad =  new Date() .getFullYear() - this .anio;    // Año actual, menos año del vehículo
-    cantidad -= ( ( antiguedad * 3 ) * cantidad ) / 100;           // Calcula reducción del 3% por cada año de diferencia
-    /* Tercer Cálculo por tipo de Seguro
-     *  - Básico aumenta 30% más
-     *  - Completo aumenta 50% más
-     */
-    if( this .tipo === 'basico'  ) {
-        cantidad *= 1.3;
-    }
-    else {
-        cantidad *= 1.5;
+        /* Validar el tipo de Error */
+        if( tipo === 'error' ) {
+            div .classList .add( 'mensaje', 'error' );          // Agrega la clase 'mensaje' y 'error' al elemento 'div'
+        }
+        else {
+            div .classList .add( 'mensaje', 'correcto' );       // Agrega la clase 'mensaje' y 'correcto' al elemento 'div'
+        }
+    
+        /* Muestra Error */
+        div .innerHTML = `${ mensaje }`;    // Agrega el mensaje al elemento 'div'
+        formulario .insertBefore( div, document .querySelector( '.form-group' ) );       // Inserta el elemento 'div' ANTES del elemento con la clase 'form-group' 
+    
+        /* Oculta el ERROR */
+        setTimeout( function() {
+            document .querySelector( '.mensaje' ) .remove();    // El elemento con la clase 'mensaje' se elimina del DOM
+        }, 5000 );     // 5s
     }
 
-    console .log( `${ this .marca } / ${ this .anio } / ${ this .tipo }: ${ cantidad }`);
+    mostrarResultado( seguro, total ) {
+        const resultado = document .getElementById( 'resultado' );
+        let marca;
+    
+        console .log( seguro );
+        switch( seguro .marca ) {
+            case '1': marca = 'Americano'; break;
+            case '2': marca = 'Asiático'; break;
+            case '3': marca = 'Europeo'; break;
+        }
+    
+        // Crea el elemento 'div' donde se mostrarán los datos
+        const div = document .createElement( 'div' );           
+        // Insertamos la información en el elemento
+        div .innerHTML = `                
+            <p class="header">Valor cotización</p>                      
+            <p><b>Marca:</b> ${ marca }</p>
+            <p><b>Año:</b> ${ seguro .anio }</p>
+            <p><b>Tipo:</b> ${ seguro .tipo }</p>
+            <p><b>Total:</b> $ ${ total }</p>
+        `;
+        // Despliega el Spinner (Cargando) 
+        const spinner = document .querySelector( '#cargando img' );
+        spinner .style .display = 'block';
+    
+        setTimeout( function() {
+            spinner .style .display = 'none';   // Oculta el Spinner
+            resultado .appendChild( div );      // Agregamos el resultado al DOM
+        }, 5000 );      // 5s
+        
+    }
+}
 
-    return cantidad;
+/* Class Seguro */
+class Seguro {
+    /* Constructor */
+    constructor( marca, anio, tipo ) {
+        this .marca = marca;
+        this .anio = anio;
+        this .tipo = tipo;
+    }
+    /* Prototypes (o Métodos) */
+    cotizar() {
+        let cantidad;
+        const base = 2000;
+        /* Primer Cálculo por Marca
+         *  1 = Americano   1.15
+         *  2 = Asiatico    1.05
+         *  3 = Europeo     1.35
+         */
+        switch(  this .marca ) {
+            case '1':   cantidad = base * 1.15; break;
+            case '2':   cantidad = base * 1.05; break;
+            case '3':   cantidad = base * 1.35; break;
+        }    
+        // Segundo Cálculo por Años (Cada año se recude 3% el valor del seguro)
+        const antiguedad =  new Date() .getFullYear() - this .anio;    // Año actual, menos año del vehículo
+        cantidad -= ( ( antiguedad * 3 ) * cantidad ) / 100;           // Calcula reducción del 3% por cada año de diferencia
+        /* Tercer Cálculo por tipo de Seguro
+         *  - Básico aumenta 30% más
+         *  - Completo aumenta 50% más
+         */
+        if( this .tipo === 'basico'  ) {
+            cantidad *= 1.3;
+        }
+        else {
+            cantidad *= 1.5;
+        }
+    
+        console .log( `${ this .marca } / ${ this .anio } / ${ this .tipo }: ${ cantidad }`);
+    
+        return cantidad;
+    }
 }
