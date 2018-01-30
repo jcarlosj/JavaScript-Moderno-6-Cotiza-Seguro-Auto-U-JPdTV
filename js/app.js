@@ -41,6 +41,9 @@ formulario .addEventListener( 'submit', function( e ) {
               valorSeguro = seguro .cotizar();      // Cotizar el Seguro
     
         console .log( 'Valor Cotización: ', valorSeguro );
+
+        // Mostrar el resultado 
+        interfaz .mostrarResultado( seguro, valorSeguro );
     }
 });
 
@@ -66,6 +69,30 @@ Interfaz .prototype .mostrarError = function( tipo, mensaje ) {
     setTimeout( function() {
         document .querySelector( '.mensaje' ) .remove();    // El elemento con la clase 'mensaje' se elimina del DOM
     }, 5000 );     // 5s
+}
+/* Agrega Prototype a 'Inferface' */
+Interfaz .prototype .mostrarResultado = function( seguro, total ) {
+    const resultado = document .getElementById( 'resultado' );
+    let marca;
+
+    console .log( seguro );
+    switch( seguro .marca ) {
+        case '1': marca = 'Americano'; break;
+        case '2': marca = 'Asiático'; break;
+        case '3': marca = 'Europeo'; break;
+    }
+
+    // Crea el elemento 'div' donde se mostrarán los datos
+    const div = document .createElement( 'div' );           
+    // Insertamos la información en el elemento
+    div .innerHTML = `                
+        <h3>Valor cotización</h3>                      
+        <p><b>Marca:</b> ${ marca }</p>
+        <p><b>Año:</b> ${ seguro .anio }</p>
+        <p><b>Tipo:</b> ${ seguro .tipo }</p>
+        <p><b>Total:</b> ${ total }</p>
+    `;
+    resultado .appendChild( div );
 }
 
 /* Constructor para el Seguro */
